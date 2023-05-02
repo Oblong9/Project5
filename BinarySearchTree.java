@@ -4,6 +4,8 @@ package adts;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.lang.model.util.ElementScanner6;
+
 import interfaces.*;
 import iterators.BSTIterator;
 import nodes.BSTNode;
@@ -200,7 +202,6 @@ public class BinarySearchTree<T extends Comparable<T>>
 	// methods that follow support operations that
 	// do not appear in BSTInterface.java
 	
-	
 	public int treeHeight() {
 		return recNodeHeight(root);
 	}
@@ -251,32 +252,27 @@ public class BinarySearchTree<T extends Comparable<T>>
 		// this will need to be updated;
 		// it was used to test integration with iterator class
 
-		// REMOVE THE PRINTS TOO
-		// DOESN'T FULLY WORK YET, NEEDS TO WORK BASED OF OF SETTRAVERSALTYPE
+		// Checks for which queue is not set to null then instantiates iterator with the corresponding queue
 		if(preOrderQ != null)
 		{
-			System.out.println("PREORDER");
-			preOrder(root);
 			return new BSTIterator<>(preOrderQ);
 		}
 		else if(postOrderQ != null)
 		{
-			System.out.println("POSTORDER");
-			postOrder(root);
 			return new BSTIterator<>(postOrderQ);
 		}
 		else if(revOrderQ != null)
 		{
-			System.out.println("REVORDER");
-			revOrder(root);
 			return new BSTIterator<>(revOrderQ);
 		}
-		else
+		else if(inOrderQ != null)
 		{
-			System.out.println("INORDER");
-			inOrder(root);
 			return new BSTIterator<>(inOrderQ);
 		}	
+		else
+		{
+			return null;
+		}
 		
 	}
 	
@@ -310,7 +306,7 @@ public class BinarySearchTree<T extends Comparable<T>>
 	}
 
 	// ADDED IN
-	// reverse order tree traversal
+	// Reverse order tree traversal
 	private void revOrder(BSTNode<T> tree)
 	{
 		if(tree != null)
@@ -327,18 +323,30 @@ public class BinarySearchTree<T extends Comparable<T>>
 		case INORDER:
 			inOrderQ = new LLQ<T>();
 			inOrder(root);
+			preOrderQ = null;
+			postOrderQ = null;
+			revOrderQ = null;
 			break;
 		case PREORDER:
 			preOrderQ = new LLQ<T>();
 			preOrder(root);
+			inOrderQ = null;
+			postOrderQ = null;
+			revOrderQ = null;
 			break;
 		case POSTORDER:
 			postOrderQ = new LLQ<T>();
 			postOrder(root);
+			preOrderQ = null;
+			inOrderQ = null;
+			revOrderQ = null;
 			break;
 		case REVORDER:
 			revOrderQ = new LLQ<T>();
 			revOrder(root);
+			preOrderQ = null;
+			postOrderQ = null;
+			inOrderQ = null;
 			break;
 		}
 	}
